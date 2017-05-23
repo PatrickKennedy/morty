@@ -1,0 +1,9 @@
+{
+  "name": "kuso-plugins",
+  "version": "1.0.0",
+  "description": "A light-weight EventEmitter driven plugin framework",
+  "main": "index.js",
+  "repository": "patrickkennedy/kuso-plugins",
+  "author": "Patrick Kennedy <p@trickkennedy.com> (http://dysio.de)",
+  "license": "MIT"
+}
