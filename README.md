@@ -4,10 +4,10 @@ KusoPlugins is a lightweight plugin framework that wraps an EventEmitter style o
 
 More importantly for an interactive application the plugins themselves are hotswappable and can be easily unloaded when no longer needed or reloaded for rapid development.
 
-It intentionally has no node dependencies and is entirely self-contained. Each part of it is based on the `BasePlugin` class. There are no extra components or concepts to worry about. Because it can tie directly into an application's events it can be used as a direct extension of the application.
+It intentionally has no node dependencies and is entirely self-contained. Each part of it is based on the `Plugin` class. There are no extra components or concepts to worry about. Because it can tie directly into an application's events it can be used as a direct extension of the application.
 
 There are two main components to the plugin:
-  1. `BasePlugin` is the base class for all plugins. It primarily provides functions for registering and unregistering handlers with the owning emitter as well as namespacing events attached to and emitted. However, it also contains many convenience features built in, including automatically registering commands, and tracking registered events and unloading them when responding to the `unload` event.
+  1. `Plugin` is the base class for all plugins. It primarily provides functions for registering and unregistering handlers with the owning emitter as well as namespacing events attached to and emitted. However, it also contains many convenience features built in, including automatically registering commands, and tracking registered events and unloading them when responding to the `unload` event.
   2. `Bootstrapper` is a psudo-management plugin that includes two commands: `load` and `unload` for use with interactive applications. It also listens to the `load_plugin` and `unload_plugin` events. It offers multiple plugin directories and handles clearing the module/require caches to ensure plugins are loaded fresh each time.
 
 Most importantly `Bootstrapper` does not make any assumptions regarding the application it's attached to. Each application is expected to manage it's own plugins for integrating with user interaction and of course the various events emitted by the application.
@@ -45,7 +45,7 @@ Note: it's preferred to load plugins via events rather than manual initializatio
 Where `app-specific-integration` might look like:
 ```js
 // app-specific-integration.js
-module.exports = class AppIntegration extends require('kuso-plugins').BasePlugin {
+module.exports = class AppIntegration extends require('kuso-plugins').Plugin {
   constructor(owner) {
     let name = __filename.slice(__dirname.length + 1, -3);
     super(name, owner);
@@ -80,7 +80,7 @@ Plugins in KusoPlugin can be as small as a single command or listener, or multi-
 
 An example of the simplest single-command plugin:
 ```Javascript
-module.exports = class Ping extends require('kuso-plugins').BasePlugin {
+module.exports = class Ping extends require('kuso-plugins').Plugin {
   constructor(owner) {
     let name = __filename.slice(__dirname.length + 1, -3);
     super(name, owner);
@@ -92,10 +92,10 @@ module.exports = class Ping extends require('kuso-plugins').BasePlugin {
 ```
 
 This is about as small a plugin as possible. Lets walk through it line-by-line:
-  - 1 - This plugin is named `Ping` and extends the BasePlugin.
-  - 3 - The name is built from the filename of the module. While it could be hardcoded this eliminates the small overhead if the module name changes. The name passed to `BasePlugin` must match the name of the module as unload events pass along the module name to the unload handler to be compared to when deciding whether to deregister events.
-  - 4 - BasePlugin is expecting the name in addition to the owner and will set it for us.
+  - 1 - This plugin is named `Ping` and extends the Plugin.
+  - 3 - The name is built from the filename of the module. While it could be hardcoded this eliminates the small overhead if the module name changes. The name passed to `Plugin` must match the name of the module as unload events pass along the module name to the unload handler to be compared to when deciding whether to deregister events.
+  - 4 - Plugin is expecting the name in addition to the owner and will set it for us.
   - 5 - Every plugin is expected to emit the `loaded` event and include it's instance.
-  - 8 - the `ping` command doesn't need to be registered because it's prefix allowing the `BasePlugin` to do it for us. It can expect to arguments, the original `msg` object that triggered it and any `args` that may have been included.
+  - 8 - the `ping` command doesn't need to be registered because it's prefix allowing the `Plugin` to do it for us. It can expect to arguments, the original `msg` object that triggered it and any `args` that may have been included.
 
 Functions prefixed with `cmd_` are automatically registered with the owning emitter with an event using this template `cmd:${handler.name.replace('cmd_', '')}`. Unlike unload events commands are not called every time and passed a string representing the command to be executed. They're uniquely namespaced and only a single handler may be loaded for a given event per plugin (in the future this may change to inspect the emitter itself, especially for commands).
