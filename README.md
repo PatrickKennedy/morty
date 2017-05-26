@@ -1,6 +1,6 @@
 About
 ===
-KusoPlugins is a lightweight plugin framework that wraps an EventEmitter style object to interact with a larger application. The emitter may by the basis for that application (e.g. a Discord.js bot) or be entirely dedicated to the plugins themselves.
+Morty is a lightweight plugin framework that wraps an EventEmitter style object to interact with a larger application. The emitter may by the basis for that application (e.g. a Discord.js bot) or be entirely dedicated to the plugins themselves.
 
 More importantly for an interactive application the plugins themselves are hotswappable and can be easily unloaded when no longer needed or reloaded for rapid development.
 
@@ -19,11 +19,11 @@ Installation
 ===
 Install using npm:
 ```
-$ npm install --save kuso-plugins
+$ npm install --save morty
 ```
 Install using yarn
 ```
-$ yarn add kuso-plugins
+$ yarn add morty
 ```
 
 
@@ -37,7 +37,7 @@ Hooking into your application is simple and can be done in one of two ways:
 Either method involves adding these lines as part of the application initialization:
 ```js
 // index.js
-new (require('kuso-plugins').Bootstrapper)(ee);
+new (require('morty').Bootstrapper)(ee);
 ee.emit('load_plugin', 'app-specific-integration');
 ```
 Note: it's preferred to load plugins via events rather than manual initialization to ensure the plugins can be fully removed from the require/module cache.
@@ -45,7 +45,7 @@ Note: it's preferred to load plugins via events rather than manual initializatio
 Where `app-specific-integration` might look like:
 ```js
 // app-specific-integration.js
-module.exports = class AppIntegration extends require('kuso-plugins').Plugin {
+module.exports = class AppIntegration extends require('morty').Plugin {
   constructor(owner) {
     let name = __filename.slice(__dirname.length + 1, -3);
     super(name, owner);
@@ -76,11 +76,11 @@ Note: The integration generally exists to provide the external command control. 
 
 Plugin Development
 ===
-Plugins in KusoPlugin can be as small as a single command or listener, or multi-command monstrosities that interact with external resources or even expose their own set of event hooks other plugins can use.
+Plugins in Morty can be as small as a single command or listener, or multi-command monstrosities that interact with external resources or even expose their own set of event hooks other plugins can use.
 
 An example of the simplest single-command plugin:
 ```Javascript
-module.exports = class Ping extends require('kuso-plugins').Plugin {
+module.exports = class Ping extends require('morty').Plugin {
   constructor(owner) {
     let name = __filename.slice(__dirname.length + 1, -3);
     super(name, owner);

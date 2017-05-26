@@ -1,9 +1,9 @@
 {
   "name": "morty",
-  "version": "0.0.2",
-  "description": "A light-weight EventEmitter driven plugin framework",
+  "version": "0.0.3",
+  "description": "A lightweight EventEmitter driven plugin framework",
   "main": "index.js",
-  "repository": "patrickkennedy/kuso-plugins",
+  "repository": "patrickkennedy/morty",
   "author": "Patrick Kennedy <p@trickkennedy.com> (http://dysio.de)",
   "license": "MIT"
 }
